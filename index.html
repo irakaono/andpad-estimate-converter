@@ -2,292 +2,118 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>アンドパッド見積インポート変換ツール</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>KKai - 小泉建設AIツール</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KKai">
+<meta name="theme-color" content="#27ae60">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',sans-serif;background:#f5f5f0;color:#1a1a1a;padding:20px 14px;}
-.wrap{max-width:1100px;margin:0 auto;}
-h1{font-size:20px;font-weight:700;margin-bottom:4px;}
-.sub{font-size:13px;color:#888;margin-bottom:20px;}
-.card{background:#fff;border-radius:12px;border:0.5px solid #e0e0d8;padding:18px 20px;margin-bottom:14px;}
-.step-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
-.num{width:28px;height:28px;border-radius:50%;background:#EEEDFE;color:#3C3489;border:0.5px solid #AFA9EC;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
-.num.off{background:#f0f0f0;color:#aaa;border-color:#ddd;}
-.step-title{font-size:15px;font-weight:600;}
-.badge{display:inline-block;padding:2px 12px;border-radius:20px;font-size:12px;font-weight:600;}
-.badge-purple{background:#EEEDFE;color:#3C3489;border:0.5px solid #AFA9EC;}
-.badge-green{background:#E1F5EE;color:#085041;border:0.5px solid #5DCAA5;}
-.upload-zone{border:2px dashed #ccc;background:#fafafa;border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .15s;}
-.upload-zone:hover,.upload-zone.drag{border-color:#534AB7;background:#f9f8ff;}
-.upload-zone.done{border-color:#5DCAA5;border-style:solid;background:#E1F5EE;}
-.upload-icon{font-size:36px;margin-bottom:8px;}
-.upload-main{font-size:15px;font-weight:600;margin-bottom:4px;}
-.upload-sub{font-size:13px;color:#888;}
-#file-input{display:none;}
-.err{background:#FCEBEB;color:#791F1F;border:1px solid #F09595;border-radius:8px;padding:10px 14px;font-size:14px;margin-bottom:14px;display:none;}
-.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
-.tab{padding:6px 16px;border-radius:20px;font-size:13px;border:none;cursor:pointer;font-family:inherit;background:#f0f0f0;color:#555;}
-.tab.active{background:#534AB7;color:#fff;font-weight:600;}
-.note{font-size:13px;color:#888;margin-bottom:10px;}
-.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px;margin-bottom:16px;}
-.map-row{display:flex;align-items:center;gap:8px;border-radius:8px;padding:7px 12px;font-size:13px;}
-.map-row.ok{background:#f0faf6;}
-.map-row.ng{background:#f9f9f7;}
-.map-src{color:#555;flex:0 0 auto;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.map-arrow{color:#bbb;flex-shrink:0;}
-.map-sel{font-size:13px;padding:4px 8px;border-radius:6px;border:1px solid #ddd;background:#fff;font-family:inherit;flex:1;}
-.table-wrap{overflow-x:auto;border:0.5px solid #e0e0d8;border-radius:8px;margin-bottom:16px;}
-table{border-collapse:collapse;font-size:12px;min-width:100%;}
-th{background:#f5f5f0;padding:7px 10px;text-align:left;font-weight:600;font-size:11px;color:#666;border-bottom:1px solid #e0e0d8;white-space:nowrap;min-width:88px;}
-td{padding:4px 6px;border-bottom:0.5px solid #f0f0ec;}
-td.mapped{background:#f0faf6;}
-td input{width:100%;font-size:12px;padding:3px 6px;border:1px solid #ddd;border-radius:4px;background:#fff;font-family:inherit;box-sizing:border-box;}
-td input:focus{outline:none;border-color:#534AB7;}
-.actions{display:flex;gap:10px;flex-wrap:wrap;}
-.btn-p{background:#534AB7;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
-.btn-p:hover{background:#3C3489;}
-.btn-s{background:#fff;color:#333;border:1px solid #ddd;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-family:inherit;}
-.btn-s:hover{background:#f5f5f0;}
-.hidden{display:none!important;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',sans-serif;background:#f0f4f0;min-height:100vh;}
+
+/* ヘッダー */
+.header{background:linear-gradient(135deg,#27ae60,#2ecc71);padding:20px 16px 24px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(39,174,96,0.3);}
+.header-icon{width:56px;height:56px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+.header-icon img{width:100%;height:100%;object-fit:cover;}
+.header-text h1{font-size:22px;font-weight:700;color:white;letter-spacing:0.5px;}
+.header-text p{font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px;letter-spacing:1px;}
+
+/* メインコンテンツ */
+.main{padding:20px 14px;max-width:600px;margin:0 auto;}
+.section-title{font-size:13px;font-weight:600;color:#888;letter-spacing:1px;margin-bottom:12px;padding-left:4px;}
+
+/* ツールカード */
+.tools{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+.tool-card{background:white;border-radius:16px;padding:20px;display:flex;align-items:center;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.04);cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;}
+.tool-card:active{transform:scale(0.98);}
+.tool-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);}
+.tool-card.disabled{opacity:0.5;cursor:default;pointer-events:none;}
+.tool-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.tool-icon.green{background:#e8f8ef;}
+.tool-icon.blue{background:#e8f0fb;}
+.tool-icon.orange{background:#fef3e8;}
+.tool-icon.purple{background:#f0ecff;}
+.tool-icon.gray{background:#f0f0f0;}
+.tool-info{flex:1;}
+.tool-name{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:3px;}
+.tool-desc{font-size:12px;color:#888;line-height:1.4;}
+.tool-badge{flex-shrink:0;}
+.badge-new{background:#27ae60;color:white;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.5px;}
+.badge-soon{background:#f0f0f0;color:#aaa;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;}
+.badge-arrow{color:#ccc;font-size:20px;font-weight:300;}
+
+/* フッター */
+.footer{text-align:center;padding:20px;font-size:12px;color:#bbb;}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>🏗️ アンドパッド見積インポート変換ツール</h1>
-  <p class="sub">業者のExcel・CSVをアンドパッドのインポート形式に自動変換します</p>
 
-  <div class="err" id="err"></div>
-
-  <!-- Step1 -->
-  <div class="card">
-    <div class="step-head">
-      <div class="num">1</div>
-      <span class="step-title">見積ファイルをアップロード</span>
-      <span class="badge badge-green hidden" id="file-badge"></span>
-    </div>
-    <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-      <input type="file" id="file-input" accept=".xlsx,.xls,.csv">
-      <div class="upload-icon">📂</div>
-      <div class="upload-main">クリックして選択、またはドラッグ＆ドロップ</div>
-      <div class="upload-sub">Excel（.xlsx / .xls）・CSV に対応　※複数シートも自動認識</div>
-    </div>
+<div class="header">
+  <div class="header-icon">
+    <img src="icon.png" alt="KKai">
   </div>
-
-  <!-- Step2 -->
-  <div class="card hidden" id="map-card">
-    <div class="step-head">
-      <div class="num">2</div>
-      <span class="step-title">列のマッピングを確認・修正</span>
-      <span class="badge badge-purple" id="map-badge" style="margin-left:auto;"></span>
-    </div>
-    <div class="tabs" id="map-tabs"></div>
-    <p class="note">自動判定した結果です。ドロップダウンで変更できます。</p>
-    <div class="map-grid" id="map-grid"></div>
-    <div class="actions">
-      <button class="btn-p" onclick="showPreview()">プレビューを確認 →</button>
-    </div>
-  </div>
-
-  <!-- Step3 -->
-  <div class="card hidden" id="preview-card">
-    <div class="step-head">
-      <div class="num">3</div>
-      <span class="step-title">変換プレビュー（編集可）</span>
-      <span class="badge badge-green" id="preview-badge" style="margin-left:auto;"></span>
-    </div>
-    <div class="tabs" id="preview-tabs"></div>
-    <p class="note" id="preview-note"></p>
-    <div class="table-wrap"><table id="preview-table"></table></div>
-    <div class="actions">
-      <button class="btn-p" onclick="downloadExcel()">⬇ アンドパッド用Excelをダウンロード</button>
-      <button class="btn-s" onclick="showMap()">← マッピングを修正</button>
-      <button class="btn-s" onclick="resetAll()">↺ 最初からやり直す</button>
-    </div>
+  <div class="header-text">
+    <h1>KKai</h1>
+    <p>KOIZUMI KENSETSU AI TOOLS</p>
   </div>
 </div>
 
-<script>
-const ANDPAD_COLS = ['フォルダ１','フォルダ２','フォルダ３','フォルダ４','摘要','工事場所','工事種類','備考1','備考2','定価','卸掛率','割引率','原単価','指定粗利率','見積単価','数量','単位','取引先ID','取引先管理ID','取引先名','メモ','PDF表示設定','商品マスター管理ID'];
+<div class="main">
+  <div class="section-title">ツール一覧</div>
+  <div class="tools">
 
-const RULES = [
-  {a:'摘要',     kw:['摘要','品名','品目','名称','工事名','項目','内容','工種','種別','件名','工種・種別']},
-  {a:'数量',     kw:['数量','数','qty','quantity','員数']},
-  {a:'単位',     kw:['単位','unit']},
-  {a:'見積単価', kw:['見積単価','単価','売単価','販売単価','売価','単価（円）','見積り単価']},
-  {a:'原単価',   kw:['原単価','原価','仕入単価','仕入れ単価','net','原価単価','仕入価格']},
-  {a:'定価',     kw:['定価','希望小売','標準価格']},
-  {a:'備考1',    kw:['備考','note','notes','備考1','remark']},
-  {a:'備考2',    kw:['備考2','note2','補足']},
-  {a:'工事場所', kw:['工事場所','場所','現場','施工場所']},
-  {a:'工事種類', kw:['工事種類','種別','種類','区分','分類']},
-  {a:'フォルダ１',kw:['フォルダ１','フォルダ1','folder1','大分類','章']},
-  {a:'フォルダ２',kw:['フォルダ２','フォルダ2','folder2','中分類','節']},
-  {a:'フォルダ３',kw:['フォルダ３','フォルダ3','folder3','小分類']},
-  {a:'フォルダ４',kw:['フォルダ４','フォルダ4','folder4']},
-  {a:'取引先名',  kw:['取引先名','業者名','会社名','仕入先','supplier']},
-  {a:'メモ',      kw:['メモ','memo','社内メモ']},
-];
-const SKIP_KW = ['合計','小計','消費税','合　　計','小　　計','注意事項','工　期','※','【注'];
+    <a class="tool-card" href="estimate.html">
+      <div class="tool-icon green">📋</div>
+      <div class="tool-info">
+        <div class="tool-name">見積インポート変換</div>
+        <div class="tool-desc">業者のExcel・CSVをアンドパッド形式に自動変換</div>
+      </div>
+      <div class="tool-badge"><span class="badge-arrow">›</span></div>
+    </a>
 
-let sheets = [], activeIdx = 0, mappings = {}, edits = {};
+    <div class="tool-card disabled">
+      <div class="tool-icon blue">🏗️</div>
+      <div class="tool-info">
+        <div class="tool-name">工事完了報告書</div>
+        <div class="tool-desc">現場写真と工事内容をまとめて報告書を自動生成</div>
+      </div>
+      <div class="tool-badge"><span class="badge-soon">Coming Soon</span></div>
+    </div>
 
-function isSkip(row){ const f=String(row[0]||'').trim(); if(f===''&&row.every(c=>c===''||c===null||c===undefined))return true; return SKIP_KW.some(k=>f.includes(k)); }
-function isHeader(row){ const vs=row.map(c=>String(c||'').trim().toLowerCase().replace(/\s/g,'')); const hk=['摘要','品名','品目','数量','単位','単価','工種','名称','項目','no']; return vs.filter(v=>hk.some(k=>v.includes(k))).length>=2; }
-function autoMap(headers){ const r={},used=new Set(); headers.forEach(h=>{ const hl=h.toLowerCase().replace(/\s/g,''); let m=null; for(const rule of RULES){ if(used.has(rule.a))continue; if(rule.kw.some(k=>hl.includes(k.toLowerCase().replace(/\s/g,'')))){m=rule.a;break;} } r[h]=m||''; if(m)used.add(m); }); return r; }
+    <div class="tool-card disabled">
+      <div class="tool-icon orange">🔍</div>
+      <div class="tool-info">
+        <div class="tool-name">雨漏り調査報告書</div>
+        <div class="tool-desc">調査結果・写真から報告書を自動作成</div>
+      </div>
+      <div class="tool-badge"><span class="badge-soon">Coming Soon</span></div>
+    </div>
 
-function parseWB(buf){
-  const wb=XLSX.read(buf,{type:'array'});
-  const result=[];
-  for(const sn of wb.SheetNames){
-    const ws=wb.Sheets[sn];
-    const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-    if(!data||data.length<2)continue;
-    let hi=-1;
-    for(let i=0;i<Math.min(data.length,10);i++){if(isHeader(data[i])){hi=i;break;}}
-    if(hi===-1)continue;
-    const rawH=data[hi].map(c=>String(c||'').trim()).slice(0,20);
-    const headers=rawH.map((h,i)=>h===''?`列${i+1}`:h);
-    const rows=data.slice(hi+1).filter(r=>!isSkip(r)&&r.some((c,i)=>i<headers.length&&c!==''&&c!==null&&c!==undefined));
-    if(!rows.length)continue;
-    result.push({sn,headers,rows});
-  }
-  return result;
-}
+    <div class="tool-card disabled">
+      <div class="tool-icon purple">🧮</div>
+      <div class="tool-info">
+        <div class="tool-name">AI積算アシスト</div>
+        <div class="tool-desc">図面・仕様書から数量・金額を自動算出</div>
+      </div>
+      <div class="tool-badge"><span class="badge-soon">Coming Soon</span></div>
+    </div>
 
-function showErr(msg){ const e=document.getElementById('err'); e.textContent=msg; e.style.display=msg?'block':'none'; }
+    <div class="tool-card disabled">
+      <div class="tool-icon gray">📌</div>
+      <div class="tool-info">
+        <div class="tool-name">点検報告書</div>
+        <div class="tool-desc">定期点検の結果を簡単に報告書化</div>
+      </div>
+      <div class="tool-badge"><span class="badge-soon">Coming Soon</span></div>
+    </div>
 
-function handleFile(file){
-  showErr('');
-  const ext=file.name.split('.').pop().toLowerCase();
-  if(!['xlsx','xls','csv'].includes(ext)){showErr('Excel（.xlsx/.xls）またはCSVのみ対応しています');return;}
-  const badge=document.getElementById('file-badge');
-  badge.textContent='✓ '+file.name; badge.classList.remove('hidden');
-  document.getElementById('drop-zone').classList.add('done');
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      sheets=parseWB(e.target.result);
-      if(!sheets.length){showErr('データが見つかりませんでした。ヘッダー行（品名・数量・単価などの列名）が含まれているか確認してください。');return;}
-      mappings={}; edits={}; activeIdx=0;
-      sheets.forEach(s=>{mappings[s.sn]=autoMap(s.headers);});
-      showMap();
-    }catch(e){showErr('読み込みエラー: '+e.message);}
-  };
-  reader.readAsArrayBuffer(file);
-}
+  </div>
+</div>
 
-const dz=document.getElementById('drop-zone');
-dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
-dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
-dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
-document.getElementById('file-input').addEventListener('change',e=>{if(e.target.files[0])handleFile(e.target.files[0]);});
+<div class="footer">KKai © 小泉建設株式会社</div>
 
-function makeTabs(containerId, onClick){
-  const c=document.getElementById(containerId); c.innerHTML='';
-  if(sheets.length<=1)return;
-  sheets.forEach((s,i)=>{
-    const b=document.createElement('button');
-    b.className='tab'+(i===activeIdx?' active':'');
-    b.textContent=s.sn+'（'+s.dataRows.length+'行）'.replace('s.dataRows','').replace(/\(.*\)/,`（${s.rows.length}行）`);
-    b.textContent=s.sn+`（${s.rows.length}行）`;
-    b.onclick=()=>{activeIdx=i;onClick();};
-    c.appendChild(b);
-  });
-}
-
-function showMap(){
-  document.getElementById('map-card').classList.remove('hidden');
-  document.getElementById('preview-card').classList.add('hidden');
-  makeTabs('map-tabs',showMap);
-  renderMapGrid();
-}
-
-function renderMapGrid(){
-  const sh=sheets[activeIdx], map=mappings[sh.sn]||{};
-  const mapped=Object.values(map).filter(Boolean).length;
-  document.getElementById('map-badge').textContent=`${mapped}/${sh.headers.length}列マッピング済み`;
-  const grid=document.getElementById('map-grid'); grid.innerHTML='';
-  sh.headers.forEach(h=>{
-    const dst=map[h]||'';
-    const div=document.createElement('div');
-    div.className='map-row '+(dst?'ok':'ng');
-    const src=document.createElement('span'); src.className='map-src'; src.textContent=h; src.title=h;
-    const arr=document.createElement('span'); arr.className='map-arrow'; arr.textContent='→';
-    const sel=document.createElement('select'); sel.className='map-sel';
-    const opt0=document.createElement('option'); opt0.value=''; opt0.textContent='（使わない）'; sel.appendChild(opt0);
-    ANDPAD_COLS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;if(c===dst)o.selected=true;sel.appendChild(o);});
-    sel.onchange=()=>{ mappings[sh.sn][h]=sel.value; div.className='map-row '+(sel.value?'ok':'ng'); const mv=Object.values(mappings[sh.sn]).filter(Boolean).length; document.getElementById('map-badge').textContent=`${mv}/${sh.headers.length}列マッピング済み`; };
-    div.appendChild(src); div.appendChild(arr); div.appendChild(sel);
-    grid.appendChild(div);
-  });
-}
-
-function showPreview(){
-  document.getElementById('preview-card').classList.remove('hidden');
-  makeTabs('preview-tabs',showPreview);
-  renderPreview();
-}
-
-function getVal(si,ri,col){
-  const key=`${si}__${ri}__${col}`;
-  if(edits[key]!==undefined)return edits[key];
-  const sh=sheets[si], map=mappings[sh.sn]||{};
-  const srcCol=Object.keys(map).find(k=>map[k]===col);
-  if(!srcCol)return '';
-  const ci=sh.headers.indexOf(srcCol);
-  if(ci<0)return '';
-  const row=sh.rows[ri];
-  return row?String(row[ci]??''):'';
-}
-
-function renderPreview(){
-  const sh=sheets[activeIdx];
-  const total=sheets.reduce((s,x)=>s+x.rows.length,0);
-  document.getElementById('preview-badge').textContent=`合計 ${total}行`;
-  const max=Math.min(sh.rows.length,10);
-  document.getElementById('preview-note').textContent=`先頭${max}行を表示。セルを直接編集できます。全${sh.rows.length}行が変換されます。`;
-  const table=document.getElementById('preview-table');
-  let html='<thead><tr>'+ANDPAD_COLS.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>';
-  for(let ri=0;ri<max;ri++){
-    html+='<tr>';
-    ANDPAD_COLS.forEach(col=>{
-      const v=getVal(activeIdx,ri,col);
-      html+=`<td class="${v?'mapped':''}" ><input value="${String(v).replace(/"/g,'&quot;').replace(/</g,'&lt;')}" data-si="${activeIdx}" data-ri="${ri}" data-col="${col}"></td>`;
-    });
-    html+='</tr>';
-  }
-  html+='</tbody>';
-  table.innerHTML=html;
-  table.querySelectorAll('input').forEach(inp=>{
-    inp.addEventListener('input',()=>{edits[`${inp.dataset.si}__${inp.dataset.ri}__${inp.dataset.col}`]=inp.value;});
-  });
-}
-
-function downloadExcel(){
-  const wsData=[ANDPAD_COLS];
-  sheets.forEach((sh,si)=>{
-    sh.rows.forEach((_,ri)=>{
-      wsData.push(ANDPAD_COLS.map(col=>{ const key=`${si}__${ri}__${col}`; if(edits[key]!==undefined)return edits[key]; const map=mappings[sh.sn]||{}; const srcCol=Object.keys(map).find(k=>map[k]===col); if(!srcCol)return ''; const ci=sh.headers.indexOf(srcCol); return ci>=0?String(sh.rows[ri][ci]??''):''; }));
-    });
-  });
-  const ws=XLSX.utils.aoa_to_sheet(wsData);
-  ws['!cols']=ANDPAD_COLS.map(()=>({wch:14}));
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
-  XLSX.writeFile(wb,'見積インポート_アンドパッド.xlsx');
-}
-
-function resetAll(){
-  sheets=[];activeIdx=0;mappings={};edits={};
-  document.getElementById('file-input').value='';
-  document.getElementById('file-badge').classList.add('hidden');
-  document.getElementById('drop-zone').classList.remove('done');
-  document.getElementById('map-card').classList.add('hidden');
-  document.getElementById('preview-card').classList.add('hidden');
-  showErr('');
-}
-</script>
 </body>
 </html>
